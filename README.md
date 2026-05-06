@@ -1,2 +1,136 @@
-Blue Ribbon runs a small club that has members. Each member has a wallet that they can use to pay for their purchases in the club. The club also has a some shops that sell a few products such as drinks, snacks, t-shirts, and event tickets. A shop can refund a member their balance if a member would like to return an item they have purchased.
+## **Task Objective**
 
+This task is designed to assess your backend engineering skills in a realistic codebase. You will implement a missing feature and improve parts of the existing codebase to make it more correct, consistent, maintainable, and performant without changing the intended business behavior.
+
+We care about clean code, clear reasoning, and practical engineering trade-offs.
+This task should take you a maximum of 5 hours to finish.
+
+## **Business Logic**
+
+Blue Ribbon runs a small club with a large member base (**70k+**). The club has several shops that sell products. Members browse shops and products through a mobile app that calls this backend.
+
+Each member has a first and last name, gender (**male** or **female** only), birthdate, and subscription date. A member can optionally have a phone number.
+
+Members may also have family members linked to them, and each family member can be associated with a maximum of one central member. Note that a member can not be their own central member, and family member can not be a central member.
+
+Each shop has a name, opening and closing hours, and availability (**busy**, **open**, **closed**). A product has a name, description, price, and stock count. A product must belong to exactly one shop. Stock count can not be less than 1 for a product.
+
+## **What You’ll Work On**
+
+**This codebase is intentionally incomplete and has a few issues.** Your job is to extend it with a missing feature and improve existing parts without changing the business behavior.
+
+**Tech Stack:**
+
+- **NestJS**
+- **PostgreSQL**
+- **Sequelize** (`sequelize-typescript`)
+- **Validation**: `nestjs-joi` (DTOs already use `@JoiSchema`)
+
+## **Requirements**
+
+### **We need to manage our products**
+
+Implement the **Product** REST API endpoints so we can:
+
+- Create a product
+- List **all products in the club**, with optional search by product name
+  - Search must be **case-insensitive**
+  - Example: searching for `"app"` should match `"Apple Juice"` and `"Pineapple"`
+- Fetch a single product (by ID)
+- Update a product
+- Delete a product
+
+Your API should follow **RESTful conventions** and common best practices (clear routes, correct status codes, predictable response shapes).
+
+### **Fetch shops with products API is too slow**
+
+The endpoint that returns shops with their products performs poorly on large datasets. Can you improve it so it scales well and avoids unnecessary database work?
+
+### **We have so many members in our club!**
+
+The API that fetches all members returns an array with a massive amount of objects. This can add load to the client-side. How can we fix this?
+
+### **Validation and correctness**
+
+- The project uses Joi for request validation, but validation is not consistently enforced and some DTO rules do not match the business rules. Make validation **reliable and consistent**, and fix mismatches between DTOs and the requirements.
+- Some business rules are not properly enforced in the codebase, which allows clients to bypass them. Ensure the API prevents invalid states (for example: invalid family links, invalid enums, etc.).
+
+### **Testing is part of the job**
+
+Testing is an essential part of our daily workflow. This project currently lacks unit test coverage.
+
+We would like to add unit tests for the **controllers and services** of the members, products and shops modules. Make sure the tests are meaningful (happy paths + at least a couple of real failure cases).
+
+### **Code quality**
+
+Improve consistency of:
+
+- **Error handling:** return correct HTTP errors instead of generic runtime errors
+- **Types:** avoid return types that don’t match real runtime behavior
+- **Documentation:** keep JSDoc style consistent across key methods
+- **Variable naming**: Make sure variable and function names are clear, consistent, and describe what they represent
+
+## **Running the project**
+
+1. Install dependencies:
+
+```jsx
+npm install
+```
+
+1. Set up environment variables:
+
+- Copy `.env.example` to `.env`
+- Set `DATABASE_URL`
+
+1. Run the server:
+
+```jsx
+npm run start:dev
+```
+
+### **Seeding data**
+
+A seeding script is included to generate a large dataset for testing performance.
+
+```jsx
+npm run seed
+```
+
+## **Deliverables**
+
+- Working implementation of the missing product endpoints
+- Improved performance for the shops-with-products endpoint
+- Validation enforced and aligned with the business rules
+
+## **Submission Instructions**
+
+- Fork this repository to your own GitHub account.
+- Implement your solution on your fork. It is recommended to commit often with clear messages.
+- Make sure everything works locally:
+  - `npm run build`
+  - `npm test`
+- Push your changes to your fork and ensure the repository is accessible via a **public link**.
+- Send us an email **by replying to the same email thread where you received this task**, and include the public link to your repository.
+
+## **Evaluation Criteria**
+
+We’ll review your work based on:
+
+- **Correctness**: Features work as expected and business rules are enforced.
+- **API design**: RESTful, consistent routes and status codes, good request/response shapes.
+- **Performance**: Avoid unnecessary DB calls, handle large datasets safely (pagination, efficient queries).
+- **Validation**: Inputs are validated consistently and invalid requests fail with clear errors.
+- **Code quality**: Clean structure, readable code, good naming, consistent documentation, minimal duplication.
+- **Testing**: Useful unit tests that cover success and failure cases.
+- **Communication**: Clearly documented assumptions either through code comments, email, or in the README.
+
+## **Notes**
+
+- You do not need to implement authentication/authorization for this task.
+- If you make assumptions, document them clearly (in code comments where relevant, or in your PR notes).
+
+## **Bonus**
+
+- Add caching where it makes sense (and explain what you cached and why).
+- Standardize error response shape (message + code + details) across the application.
