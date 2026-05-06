@@ -1,3 +1,9 @@
+# Blue Ribbon Egypt - Backend Developer Task
+
+Blue Ribbon is established with a sense of mission to create inspirational communities that harness the positive power of collective good.
+
+We aim to transform the lifestyle industry with bold thinking, continuous innovation and a meticulous focus on execution. If you are passionate like us, ready to build the future and participate in positively and conscientiously impacting the lives of others, there is but one thing to do: join us.
+
 ## **Task Objective**
 
 This task is designed to assess your backend engineering skills in a realistic codebase. You will implement a missing feature and improve parts of the existing codebase to make it more correct, consistent, maintainable, and performant without changing the intended business behavior.
@@ -115,15 +121,7 @@ npm run seed
 
 ## **Evaluation Criteria**
 
-We’ll review your work based on:
-
-- **Correctness**: Features work as expected and business rules are enforced.
-- **API design**: RESTful, consistent routes and status codes, good request/response shapes.
-- **Performance**: Avoid unnecessary DB calls, handle large datasets safely (pagination, efficient queries).
-- **Validation**: Inputs are validated consistently and invalid requests fail with clear errors.
-- **Code quality**: Clean structure, readable code, good naming, consistent documentation, minimal duplication.
-- **Testing**: Useful unit tests that cover success and failure cases.
-- **Communication**: Clearly documented assumptions either through code comments, email, or in the README.
+We’ll review your work based on: **Correctness**, **Performance**, **Code quality**, and **Testing**
 
 ## **Notes**
 
