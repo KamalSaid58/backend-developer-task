@@ -6,7 +6,9 @@ import {
   Model,
   ForeignKey,
   BelongsTo,
+  HasMany,
 } from 'sequelize-typescript';
+
 @Table({ tableName: 'members' })
 export class Member extends Model<Member> {
   @PrimaryKey
@@ -26,15 +28,18 @@ export class Member extends Model<Member> {
   gender: string;
 
   @Column({ type: DataType.STRING, allowNull: false })
-  dateOfBirth: string;
+  dateOfBirth: string; // Format: DD-MM-YYYY
 
   @Column({ type: DataType.STRING(255), allowNull: true })
   phone?: string;
 
-  @Column({ type: DataType.UUID })
   @ForeignKey(() => Member)
-  centralMemberId?: string;
+  @Column({ type: DataType.UUID, allowNull: true })
+  centralMemberId?: string; // Reference to central member (if this is a family member)
 
-  @BelongsTo(() => Member)
+  @BelongsTo(() => Member, 'centralMemberId')
   centralMember?: Member;
+
+  @HasMany(() => Member, 'centralMemberId')
+  familyMembers?: Member[]; // Family members linked to this central member
 }

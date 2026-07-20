@@ -88,4 +88,26 @@ export class MembersRepository {
   async delete(id: string): Promise<void> {
     await this.memberModel.destroy({ where: { id } });
   }
+
+  /**
+   * Check if a member exists by ID.
+   *
+   * @param {string} id - Member ID to check.
+   * @returns {Promise<boolean>} True if member exists, false otherwise.
+   */
+  async memberExists(id: string): Promise<boolean> {
+    const member = await this.memberModel.findByPk(id);
+    return !!member;
+  }
+
+  /**
+   * Check if a member is already a family member (has a central member).
+   *
+   * @param {string} memberId - Member ID to check.
+   * @returns {Promise<boolean>} True if member is a family member, false otherwise.
+   */
+  async isFamilyMember(memberId: string): Promise<boolean> {
+    const member = await this.memberModel.findByPk(memberId);
+    return !!member?.centralMemberId;
+  }
 }

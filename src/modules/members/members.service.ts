@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { CreateMemberDTO } from 'src/modules/members/dto/create-member.dto';
 import { MemberDTO } from 'src/modules/members/dto/member.dto';
 import { UpdateMemberDTO } from 'src/modules/members/dto/update-member.dto';
@@ -11,10 +11,38 @@ export class MembersService {
 
   /**
    * This method creates a new member
+   * Validates family member constraints:
+   * - Member cannot be their own central member
+   * - Central member must exist
+   * - Family member cannot have family members (no recursive relationships)
+   *
    * @param member - The member to create
    * @returns The created member
+   * @throws BadRequestException if validation fails
    */
   async create(member: CreateMemberDTO): Promise<MemberDTO> {
+    if (member.centralMemberId) {
+      // 1. A member cannot be their own central member
+      const centralMemberExists = await this.repository.memberExists(
+        member.centralMemberId,
+      );
+      if (!centralMemberExists) {
+        throw new BadRequestException(
+          `Central member with ID ${member.centralMemberId} does not exist`,
+        );
+      }
+
+      // 2. A family member cannot be a central member (no recursive relationships)
+      const isCentralMemberAFamilyMember = await this.repository.isFamilyMember(
+        member.centralMemberId,
+      );
+      if (isCentralMemberAFamilyMember) {
+        throw new BadRequestException(
+          `Central member cannot be a family member. Family members cannot have their own family members.`,
+        );
+      }
+    }
+
     return this.repository.create(member);
   }
 
@@ -56,7 +84,49 @@ export class MembersService {
     return this.repository.findOne(id);
   }
 
+  /**
+   * Updates a member
+   * Validates:
+   * - Member cannot be their own central member
+   * - Central member must exist (if being set)
+   * - Family member cannot have family members
+   *
+   * @param id - Member ID to update
+   * @param member - Fields to update
+   * @returns Updated member
+   * @throws BadRequestException if validation fails
+   */
   async update(id: string, member: UpdateMemberDTO): Promise<MemberDTO> {
+    // Validate family member constraints if centralMemberId is being updated
+    if (member.centralMemberId !== undefined) {
+      // 1. A member cannot be their own central member
+      if (member.centralMemberId === id) {
+        throw new BadRequestException(
+          'A member cannot be their own central member',
+        );
+      }
+
+      // 2. Central member must exist
+      const centralMemberExists = await this.repository.memberExists(
+        member.centralMemberId,
+      );
+      if (!centralMemberExists) {
+        throw new BadRequestException(
+          `Central member with ID ${member.centralMemberId} does not exist`,
+        );
+      }
+
+      // 3. A family member cannot be a central member
+      const isCentralMemberAFamilyMember = await this.repository.isFamilyMember(
+        member.centralMemberId,
+      );
+      if (isCentralMemberAFamilyMember) {
+        throw new BadRequestException(
+          `Central member cannot be a family member. Family members cannot have their own family members.`,
+        );
+      }
+    }
+
     return this.repository.update(id, member);
   }
 
