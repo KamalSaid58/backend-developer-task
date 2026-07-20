@@ -18,10 +18,10 @@ export class CreateMemberDTO {
 
   @JoiSchema(
     Joi.string()
-      .regex(/^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-\d{4}$/)
+      .regex(/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/)
       .required(),
   )
-  dateOfBirth: string; // Format: DD-MM-YYYY (e.g., 17-07-2003) - Day: 01-31, Month: 01-12
+  dateOfBirth: string; // Format: YYYY-MM-DD (e.g., 2003-07-17) - Year: any, Month: 01-12, Day: 01-31
 
   @JoiSchema(
     Joi.string()
