@@ -1,7 +1,6 @@
 import { JoiSchema } from 'nestjs-joi';
 import * as Joi from 'joi';
-
-const GENDER_OPTIONS = ['male', 'female'];
+import { GENDER_OPTIONS } from 'src/common/enums/gender.enum';
 
 export class UpdateMemberDTO {
   @JoiSchema(Joi.string().trim().min(1).optional())
