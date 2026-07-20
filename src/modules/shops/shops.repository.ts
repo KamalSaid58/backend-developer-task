@@ -17,12 +17,15 @@ export class ShopsRepository {
 
   /**
    * Fetch all shops with their products using eager loading (fixes N+1 problem)
-   * @param limit - Maximum number of shops to return (default: unlimited)
-   * @param offset - Number of shops to skip for pagination (default: 0)
-   * @returns Shops with eagerly loaded products
+   * @param limit - Maximum number of shops to return
+   * @param offset - Number of shops to skip for pagination
+   * @returns Shops with eagerly loaded products and total count
    */
-  async findAllWithProducts(limit?: number, offset?: number): Promise<Shop[]> {
-    return this.shopModel.findAll({
+  async findAllWithProducts(
+    limit?: number,
+    offset?: number,
+  ): Promise<{ rows: Shop[]; count: number }> {
+    return this.shopModel.findAndCountAll({
       include: [
         {
           model: Product,

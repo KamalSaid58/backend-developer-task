@@ -4,6 +4,7 @@ import { ShopWithProductsDTO } from 'src/modules/shops/dto/shop-with-products.dt
 import { ShopDTO } from 'src/modules/shops/dto/shop.dto';
 import { UpdateShopDTO } from 'src/modules/shops/dto/update-shop.dto';
 import { ShopsRepository } from 'src/modules/shops/shops.repository';
+import { PaginatedResponseDTO } from 'src/common/dto/paginated-response.dto';
 
 @Injectable()
 export class ShopsService {
@@ -23,16 +24,19 @@ export class ShopsService {
    *
    * @param limit - Maximum number of shops to return
    * @param offset - Number of shops to skip (for pagination)
-   * @returns All shops with their products eager-loaded
+   * @returns Paginated shops with their products eager-loaded
    */
   async findAllWithProducts(
     limit?: number,
     offset?: number,
-  ): Promise<ShopWithProductsDTO[]> {
-    const shops = await this.repository.findAllWithProducts(limit, offset);
+  ): Promise<PaginatedResponseDTO<ShopWithProductsDTO>> {
+    const { rows, count } = await this.repository.findAllWithProducts(
+      limit,
+      offset,
+    );
 
     // Map the model to DTO (products are already included)
-    return shops.map((shop) => ({
+    const data = rows.map((shop) => ({
       id: shop.id,
       name: shop.name,
       openingHour: shop.openingHour,
@@ -47,6 +51,13 @@ export class ShopsService {
         stockCount: product.stockCount,
       })),
     }));
+
+    return {
+      data,
+      total: count,
+      limit: limit,
+      offset: offset,
+    };
   }
 
   async findOne(id: string): Promise<ShopDTO> {

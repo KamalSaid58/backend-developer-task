@@ -13,6 +13,7 @@ import { CreateShopDTO } from './dto/create-shop.dto';
 import { UpdateShopDTO } from './dto/update-shop.dto';
 import { ShopDTO } from './dto/shop.dto';
 import { ShopWithProductsDTO } from 'src/modules/shops/dto/shop-with-products.dto';
+import { PaginatedResponseDTO } from 'src/common/dto/paginated-response.dto';
 
 @Controller('shops')
 export class ShopsController {
@@ -32,11 +33,10 @@ export class ShopsController {
   async findAllWithProducts(
     @Query('limit') limit?: string,
     @Query('offset') offset?: string,
-  ): Promise<ShopWithProductsDTO[]> {
-    return this.shopsService.findAllWithProducts(
-      limit ? parseInt(limit, 10) : undefined,
-      offset ? parseInt(offset, 10) : undefined,
-    );
+  ): Promise<PaginatedResponseDTO<ShopWithProductsDTO>> {
+    const parsedLimit = limit ? parseInt(limit, 10) : 10;
+    const parsedOffset = offset ? parseInt(offset, 10) : 0;
+    return this.shopsService.findAllWithProducts(parsedLimit, parsedOffset);
   }
 
   @Get(':id')
