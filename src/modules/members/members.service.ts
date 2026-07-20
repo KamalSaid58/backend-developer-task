@@ -3,6 +3,7 @@ import { CreateMemberDTO } from 'src/modules/members/dto/create-member.dto';
 import { MemberDTO } from 'src/modules/members/dto/member.dto';
 import { UpdateMemberDTO } from 'src/modules/members/dto/update-member.dto';
 import { MembersRepository } from 'src/modules/members/members.repository';
+import { PaginatedResponseDTO } from 'src/common/dto/paginated-response.dto';
 
 @Injectable()
 export class MembersService {
@@ -24,6 +25,31 @@ export class MembersService {
    */
   async findAll(): Promise<MemberDTO[]> {
     return this.repository.findAll();
+  }
+
+  /**
+   * Fetches members with offset/limit pagination.
+   * Prevents sending massive result sets to the client.
+   *
+   * @param limit - Maximum number of members per page
+   * @param offset - Number of members to skip
+   * @returns Paginated response with data, total, limit, offset
+   */
+  async findAllPaginated(
+    limit: number,
+    offset: number,
+  ): Promise<PaginatedResponseDTO<MemberDTO>> {
+    const { rows, count } = await this.repository.findAllWithPagination(
+      limit,
+      offset,
+    );
+
+    return {
+      data: rows,
+      total: count,
+      limit,
+      offset,
+    };
   }
 
   async findOne(id: string): Promise<MemberDTO> {

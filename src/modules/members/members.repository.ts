@@ -31,6 +31,26 @@ export class MembersRepository {
   }
 
   /**
+   * Fetches all members with pagination using offset/limit.
+   * Uses Sequelize's findAndCountAll for efficient pagination.
+   *
+   * @param {number} limit - Maximum number of members to return
+   * @param {number} offset - Number of members to skip
+   * @returns {Promise<{rows: Member[], count: number}>} Members and total count
+   * @throws {Error} If the database query fails.
+   */
+  async findAllWithPagination(
+    limit: number,
+    offset: number,
+  ): Promise<{ rows: Member[]; count: number }> {
+    return this.memberModel.findAndCountAll({
+      limit,
+      offset,
+      order: [['createdAt', 'DESC']],
+    });
+  }
+
+  /**
    * Fetches a single member by ID.
    *
    * @param {string} id - Member ID to look up.

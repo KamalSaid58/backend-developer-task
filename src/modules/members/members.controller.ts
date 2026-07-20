@@ -6,11 +6,13 @@ import {
   Param,
   Body,
   Patch,
+  Query,
 } from '@nestjs/common';
 import { MembersService } from './members.service';
 import { CreateMemberDTO } from './dto/create-member.dto';
 import { UpdateMemberDTO } from './dto/update-member.dto';
 import { MemberDTO } from './dto/member.dto';
+import { PaginatedResponseDTO } from 'src/common/dto/paginated-response.dto';
 
 @Controller('members')
 export class MembersController {
@@ -22,8 +24,13 @@ export class MembersController {
   }
 
   @Get()
-  async findAll(): Promise<MemberDTO[]> {
-    return this.membersService.findAll();
+  async findAll(
+    @Query('limit') limit?: string,
+    @Query('offset') offset?: string,
+  ): Promise<MemberDTO[] | PaginatedResponseDTO<MemberDTO>> {
+    const parsedLimit = limit ? parseInt(limit, 10) : 10;
+    const parsedOffset = offset ? parseInt(offset, 10) : 0;
+    return this.membersService.findAllPaginated(parsedLimit, parsedOffset);
   }
 
   @Get(':id')
