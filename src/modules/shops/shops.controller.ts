@@ -7,6 +7,8 @@ import {
   Param,
   Body,
   Query,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { ShopsService } from './shops.service';
 import { CreateShopDTO } from './dto/create-shop.dto';
@@ -20,6 +22,7 @@ export class ShopsController {
   constructor(private readonly shopsService: ShopsService) {}
 
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   async create(@Body() createShopDto: CreateShopDTO): Promise<ShopDTO> {
     return this.shopsService.create(createShopDto);
   }
@@ -53,6 +56,7 @@ export class ShopsController {
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('id') id: string): Promise<void> {
     return this.shopsService.delete(id);
   }

@@ -7,6 +7,8 @@ import {
   Param,
   Body,
   Query,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDTO } from './dto/create-product.dto';
@@ -18,6 +20,7 @@ export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   async create(
     @Body() createProductDto: CreateProductDTO,
   ): Promise<ProductDTO> {
@@ -43,6 +46,7 @@ export class ProductsController {
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('id') id: string): Promise<void> {
     return this.productsService.delete(id);
   }

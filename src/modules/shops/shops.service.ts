@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateShopDTO } from 'src/modules/shops/dto/create-shop.dto';
 import { ShopWithProductsDTO } from 'src/modules/shops/dto/shop-with-products.dto';
 import { ShopDTO } from 'src/modules/shops/dto/shop.dto';
@@ -61,14 +61,26 @@ export class ShopsService {
   }
 
   async findOne(id: string): Promise<ShopDTO> {
-    return this.repository.findOne(id);
+    const shop = await this.repository.findOne(id);
+    if (!shop) {
+      throw new NotFoundException(`Shop with ID "${id}" not found`);
+    }
+    return shop;
   }
 
   async update(id: string, shop: UpdateShopDTO): Promise<ShopDTO> {
+    const existingShop = await this.repository.findOne(id);
+    if (!existingShop) {
+      throw new NotFoundException(`Shop with ID "${id}" not found`);
+    }
     return this.repository.update(id, shop);
   }
 
-  async delete(id: string) {
+  async delete(id: string): Promise<void> {
+    const shop = await this.repository.findOne(id);
+    if (!shop) {
+      throw new NotFoundException(`Shop with ID "${id}" not found`);
+    }
     return this.repository.delete(id);
   }
 }

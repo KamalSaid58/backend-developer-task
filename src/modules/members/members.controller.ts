@@ -7,6 +7,8 @@ import {
   Body,
   Patch,
   Query,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { MembersService } from './members.service';
 import { CreateMemberDTO } from './dto/create-member.dto';
@@ -19,6 +21,7 @@ export class MembersController {
   constructor(private readonly membersService: MembersService) {}
 
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   async create(@Body() createMemberDto: CreateMemberDTO): Promise<MemberDTO> {
     return this.membersService.create(createMemberDto);
   }
@@ -47,6 +50,7 @@ export class MembersController {
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('id') id: string): Promise<void> {
     return this.membersService.delete(id);
   }

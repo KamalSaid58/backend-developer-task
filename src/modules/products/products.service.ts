@@ -3,6 +3,7 @@ import {
   BadRequestException,
   Inject,
   forwardRef,
+  NotFoundException,
 } from '@nestjs/common';
 import { ProductsRepository } from 'src/modules/products/products.repository';
 import { ShopsService } from 'src/modules/shops/shops.service';
@@ -39,14 +40,37 @@ export class ProductsService {
   }
 
   async findOne(id: string): Promise<ProductDTO> {
-    return this.repository.findOne(id);
+    const product = await this.repository.findOne(id);
+    if (!product) {
+      throw new NotFoundException(`Product with ID "${id}" not found`);
+    }
+    return product;
   }
 
   async update(id: string, product: UpdateProductDTO): Promise<ProductDTO> {
+    const existingProduct = await this.repository.findOne(id);
+    if (!existingProduct) {
+      throw new NotFoundException(`Product with ID "${id}" not found`);
+    }
+
+    // If updating shopId, verify the new shop exists
+    if (product.shopId) {
+      const shop = await this.shopsService.findOne(product.shopId);
+      if (!shop) {
+        throw new BadRequestException(
+          `Shop with ID "${product.shopId}" does not exist`,
+        );
+      }
+    }
+
     return this.repository.update(id, product);
   }
 
   async delete(id: string): Promise<void> {
+    const product = await this.repository.findOne(id);
+    if (!product) {
+      throw new NotFoundException(`Product with ID "${id}" not found`);
+    }
     return this.repository.delete(id);
   }
 }
