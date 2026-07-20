@@ -6,6 +6,7 @@ import {
   Delete,
   Param,
   Body,
+  Query,
 } from '@nestjs/common';
 import { ShopsService } from './shops.service';
 import { CreateShopDTO } from './dto/create-shop.dto';
@@ -28,8 +29,14 @@ export class ShopsController {
   }
 
   @Get('with-products')
-  async findAllWithProducts(): Promise<ShopWithProductsDTO[]> {
-    return this.shopsService.findAllWithProducts();
+  async findAllWithProducts(
+    @Query('limit') limit?: string,
+    @Query('offset') offset?: string,
+  ): Promise<ShopWithProductsDTO[]> {
+    return this.shopsService.findAllWithProducts(
+      limit ? parseInt(limit, 10) : undefined,
+      offset ? parseInt(offset, 10) : undefined,
+    );
   }
 
   @Get(':id')

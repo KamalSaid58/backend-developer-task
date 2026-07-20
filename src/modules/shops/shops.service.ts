@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { ProductsService } from 'src/modules/products/products.service';
 import { CreateShopDTO } from 'src/modules/shops/dto/create-shop.dto';
 import { ShopWithProductsDTO } from 'src/modules/shops/dto/shop-with-products.dto';
 import { ShopDTO } from 'src/modules/shops/dto/shop.dto';
@@ -8,10 +7,7 @@ import { ShopsRepository } from 'src/modules/shops/shops.repository';
 
 @Injectable()
 export class ShopsService {
-  constructor(
-    private readonly repository: ShopsRepository,
-    private readonly productsService: ProductsService,
-  ) {}
+  constructor(private readonly repository: ShopsRepository) {}
 
   async create(shop: CreateShopDTO): Promise<ShopDTO> {
     return this.repository.create(shop);
@@ -22,26 +18,35 @@ export class ShopsService {
   }
 
   /**
-   * This method finds all shops with their products
-   * @returns All shops with their products
+   * Finds all shops with their products using eager loading.
+   * This eliminates the N+1 query problem.
+   *
+   * @param limit - Maximum number of shops to return
+   * @param offset - Number of shops to skip (for pagination)
+   * @returns All shops with their products eager-loaded
    */
-  async findAllWithProducts(): Promise<ShopWithProductsDTO[]> {
-    const everything = await this.repository.findAll();
+  async findAllWithProducts(
+    limit?: number,
+    offset?: number,
+  ): Promise<ShopWithProductsDTO[]> {
+    const shops = await this.repository.findAllWithProducts(limit, offset);
 
-    const arr = [];
-
-    for (let i = 0; i < everything.length; i++) {
-      const shop = everything[i];
-      const products = await this.productsService.findWithFilter({
-        shopId: shop.id,
-      });
-      arr.push({
-        ...shop,
-        products,
-      });
-    }
-
-    return arr;
+    // Map the model to DTO (products are already included)
+    return shops.map((shop) => ({
+      id: shop.id,
+      name: shop.name,
+      openingHour: shop.openingHour,
+      closingHour: shop.closingHour,
+      availability: shop.availability,
+      products: (shop.products || []).map((product) => ({
+        id: product.id,
+        shopId: product.shopId,
+        name: product.name,
+        description: product.description,
+        price: product.price,
+        stockCount: product.stockCount,
+      })),
+    }));
   }
 
   async findOne(id: string): Promise<ShopDTO> {
