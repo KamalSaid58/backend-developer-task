@@ -5,10 +5,14 @@ import {
   HttpException,
   HttpStatus,
   BadRequestException,
-  NotFoundException,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { ErrorResponseDTO } from 'src/common/dto/error-response.dto';
+
+interface ExceptionResponseShape {
+  message?: string | string[];
+  error?: string;
+}
 
 /**
  * Global exception filter that standardizes error responses across the application.
@@ -26,11 +30,17 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 
     if (exception instanceof HttpException) {
       statusCode = exception.getStatus();
-      const exceptionResponse = exception.getResponse() as any;
-      message = exceptionResponse.message || exception.message || message;
+      const exceptionResponse =
+        exception.getResponse() as ExceptionResponseShape;
+      const responseMessage = exceptionResponse.message;
+
+      message = Array.isArray(responseMessage)
+        ? responseMessage.join(', ')
+        : responseMessage || exception.message || message;
+
       if (exception instanceof BadRequestException) {
-        if (Array.isArray(exceptionResponse.message)) {
-          details = exceptionResponse.message;
+        if (Array.isArray(responseMessage)) {
+          details = responseMessage;
         } else if (exceptionResponse.error) {
           details = exceptionResponse.error;
         }

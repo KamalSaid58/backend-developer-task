@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Op } from 'sequelize';
+import { Op, WhereOptions } from 'sequelize';
 import { Product } from 'src/modules/products/products.model';
 
 @Injectable()
@@ -18,12 +18,10 @@ export class ProductsRepository {
   }
 
   async findAll(name?: string): Promise<Product[]> {
-    const where: any = {};
-
+    const where: WhereOptions<Product> = {};
     if (name) {
       where.name = { [Op.iLike]: `%${name}%` };
     }
-
     return this.productModel.findAll({ where });
   }
 
