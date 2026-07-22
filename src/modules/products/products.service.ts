@@ -25,12 +25,7 @@ export class ProductsService {
 
   async create(product: CreateProductDTO): Promise<ProductDTO> {
     // Verify that the shop exists before creating the product
-    const shop = await this.shopsService.findOne(product.shopId);
-    if (!shop) {
-      throw new BadRequestException(
-        `Shop with ID "${product.shopId}" does not exist`,
-      );
-    }
+    await this.shopsService.findOne(product.shopId);
 
     return this.repository.create(product);
   }
@@ -55,12 +50,7 @@ export class ProductsService {
 
     // If updating shopId, verify the new shop exists
     if (product.shopId) {
-      const shop = await this.shopsService.findOne(product.shopId);
-      if (!shop) {
-        throw new BadRequestException(
-          `Shop with ID "${product.shopId}" does not exist`,
-        );
-      }
+      await this.shopsService.findOne(product.shopId);
     }
 
     return this.repository.update(id, product);
