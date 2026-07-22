@@ -40,7 +40,9 @@ export class ShopsRepository {
         },
       ],
       limit,
-      offset: offset || 0,
+      offset: offset,
+      distinct: true,
+      col: `${this.shopModel.name}.id`,
     });
   }
 
