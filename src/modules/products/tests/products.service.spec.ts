@@ -1,4 +1,4 @@
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProductsService } from '../products.service';
 import { ProductsRepository } from '../products.repository';
@@ -82,10 +82,10 @@ describe('ProductsService', () => {
 
   it('should throw when creating a product for a missing shop', async () => {
     const createProductDto = buildCreateProductDto();
-    shopsService.findOne.mockResolvedValue(null);
+    shopsService.findOne.mockRejectedValue(new NotFoundException());
 
     await expect(service.create(createProductDto)).rejects.toBeInstanceOf(
-      BadRequestException,
+      NotFoundException,
     );
 
     expect(repository.create).not.toHaveBeenCalled();
@@ -154,11 +154,11 @@ describe('ProductsService', () => {
   it('should throw when updating a product with a missing shop', async () => {
     const updateProductDto = buildUpdateProductDto({ shopId: shopIdFixture });
     repository.findOne.mockResolvedValue(buildProductDto());
-    shopsService.findOne.mockResolvedValue(null);
+    shopsService.findOne.mockRejectedValue(new NotFoundException());
 
     await expect(
       service.update(productIdFixture, updateProductDto),
-    ).rejects.toBeInstanceOf(BadRequestException);
+    ).rejects.toBeInstanceOf(NotFoundException);
 
     expect(repository.update).not.toHaveBeenCalled();
   });
