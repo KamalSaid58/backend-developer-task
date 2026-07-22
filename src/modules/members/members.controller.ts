@@ -30,7 +30,7 @@ export class MembersController {
   async findAll(
     @Query('limit') limit?: string,
     @Query('offset') offset?: string,
-  ): Promise<MemberDTO[] | PaginatedResponseDTO<MemberDTO>> {
+  ): Promise<PaginatedResponseDTO<MemberDTO>> {
     const parsedLimit = limit ? parseInt(limit, 10) : 10;
     const parsedOffset = offset ? parseInt(offset, 10) : 0;
     return this.membersService.findAllPaginated(parsedLimit, parsedOffset);
