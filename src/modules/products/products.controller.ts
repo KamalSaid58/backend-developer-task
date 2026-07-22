@@ -2,7 +2,7 @@ import {
   Controller,
   Get,
   Post,
-  Put,
+  Patch,
   Delete,
   Param,
   Body,
@@ -37,7 +37,7 @@ export class ProductsController {
     return this.productsService.findOne(id);
   }
 
-  @Put(':id')
+  @Patch(':id')
   async update(
     @Param('id') id: string,
     @Body() updateProductDto: UpdateProductDTO,
