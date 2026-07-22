@@ -1,7 +1,7 @@
 export class ShopDTO {
   id: string;
   name: string;
-  openingHour: Date;
-  closingHour: Date;
+  openingHour: string;
+  closingHour: string;
   availability: string;
 }

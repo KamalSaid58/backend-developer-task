@@ -36,8 +36,8 @@ async function seed() {
   await Shop.destroy({ where: {}, truncate: true, cascade: true });
   await Member.destroy({ where: {}, truncate: true, cascade: true });
 
-  const now = new Date();
-  const twoHoursLater = new Date(now.getTime() + 2 * 60 * 60 * 1000);
+  const openingHour = '08:00:00';
+  const closingHour = '20:00:00';
 
   // Shops: 1..100
   const shopsPayload: Partial<Shop>[] = [];
@@ -45,8 +45,8 @@ async function seed() {
   for (let i = 1; i <= 100; i++) {
     shopsPayload.push({
       name: `Shop ${i}`,
-      openingHour: now,
-      closingHour: twoHoursLater,
+      openingHour,
+      closingHour,
       availability: availabilityCycle[i % availabilityCycle.length],
     });
   }

@@ -6,11 +6,19 @@ export class CreateShopDTO {
   @JoiSchema(Joi.string().trim().min(1).required())
   name: string;
 
-  @JoiSchema(Joi.date().iso().required())
-  openingHour: Date;
+  @JoiSchema(
+    Joi.string()
+      .pattern(/^\d{2}:\d{2}(:\d{2})?$/)
+      .required(),
+  )
+  openingHour: string;
 
-  @JoiSchema(Joi.date().iso().required())
-  closingHour: Date;
+  @JoiSchema(
+    Joi.string()
+      .pattern(/^\d{2}:\d{2}(:\d{2})?$/)
+      .required(),
+  )
+  closingHour: string;
 
   @JoiSchema(
     Joi.string()

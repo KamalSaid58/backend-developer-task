@@ -20,11 +20,11 @@ export class Shop extends Model<Shop> {
   @Column({ type: DataType.STRING(255), allowNull: false })
   name: string;
 
-  @Column({ type: DataType.DATE, allowNull: false })
-  openingHour: Date;
+  @Column({ type: DataType.TIME, allowNull: false })
+  openingHour: string;
 
-  @Column({ type: DataType.DATE, allowNull: false })
-  closingHour: Date;
+  @Column({ type: DataType.TIME, allowNull: false })
+  closingHour: string;
 
   @Column({ type: DataType.STRING(32), allowNull: false })
   availability: string;

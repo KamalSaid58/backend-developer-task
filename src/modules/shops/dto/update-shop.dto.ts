@@ -5,11 +5,19 @@ export class UpdateShopDTO {
   @JoiSchema(Joi.string().trim().min(1).optional())
   name?: string;
 
-  @JoiSchema(Joi.date().iso().optional())
-  openingHour?: Date;
+  @JoiSchema(
+    Joi.string()
+      .pattern(/^\d{2}:\d{2}(:\d{2})?$/)
+      .optional(),
+  )
+  openingHour?: string;
 
-  @JoiSchema(Joi.date().iso().optional())
-  closingHour?: Date;
+  @JoiSchema(
+    Joi.string()
+      .pattern(/^\d{2}:\d{2}(:\d{2})?$/)
+      .optional(),
+  )
+  closingHour?: string;
 
   @JoiSchema(
     Joi.string()

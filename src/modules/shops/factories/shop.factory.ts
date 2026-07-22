@@ -10,8 +10,8 @@ export const buildCreateShopDto = (
   overrides: Partial<CreateShopDTO> = {},
 ): CreateShopDTO => ({
   name: 'Downtown Shop',
-  openingHour: new Date('2026-07-21T08:00:00.000Z'),
-  closingHour: new Date('2026-07-21T20:00:00.000Z'),
+  openingHour: '08:00:00',
+  closingHour: '20:00:00',
   availability: 'open',
   ...overrides,
 });
@@ -20,8 +20,8 @@ export const buildUpdateShopDto = (
   overrides: Partial<UpdateShopDTO> = {},
 ): UpdateShopDTO => ({
   name: 'Downtown Shop Updated',
-  openingHour: new Date('2026-07-21T09:00:00.000Z'),
-  closingHour: new Date('2026-07-21T21:00:00.000Z'),
+  openingHour: '09:00:00',
+  closingHour: '21:00:00',
   availability: 'open',
   ...overrides,
 });
@@ -29,8 +29,8 @@ export const buildUpdateShopDto = (
 export const buildShopDto = (overrides: Partial<ShopDTO> = {}): ShopDTO => ({
   id: shopIdFixture,
   name: 'Downtown Shop',
-  openingHour: new Date('2026-07-21T08:00:00.000Z'),
-  closingHour: new Date('2026-07-21T20:00:00.000Z'),
+  openingHour: '08:00:00',
+  closingHour: '20:00:00',
   availability: 'open',
   ...overrides,
 });
@@ -40,8 +40,8 @@ export const buildShopWithProductsDto = (
 ): ShopWithProductsDTO => ({
   id: shopIdFixture,
   name: 'Downtown Shop',
-  openingHour: new Date('2026-07-21T08:00:00.000Z'),
-  closingHour: new Date('2026-07-21T20:00:00.000Z'),
+  openingHour: '08:00:00',
+  closingHour: '20:00:00',
   availability: 'open',
   products: [
     {
