@@ -28,13 +28,6 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       statusCode = exception.getStatus();
       const exceptionResponse = exception.getResponse() as any;
       message = exceptionResponse.message || exception.message || message;
-
-      // Convert NotFoundException (404) to BadRequest (400)
-      if (exception instanceof NotFoundException) {
-        statusCode = HttpStatus.BAD_REQUEST;
-      }
-
-      // Extract validation errors from BadRequestException
       if (exception instanceof BadRequestException) {
         if (Array.isArray(exceptionResponse.message)) {
           details = exceptionResponse.message;
